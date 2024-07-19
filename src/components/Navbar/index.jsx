@@ -6,7 +6,7 @@ export const Navbar = () => {
    return (
       <nav className='fixed z-10 border w-full top-0 py-5 px-4 bg-white'>
          <ul className='flex items-center gap-3'>
-            <li>
+            <li className='font-bold text-lg'>
                <NavLink
                   to='/'
                   className={({ isActive }) =>

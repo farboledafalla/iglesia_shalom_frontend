@@ -1,3 +1,10 @@
+// Componentes
+import { Layout } from '../../components/Layout';
+
 export const Ministerios = () => {
-   return <div>Ministerios</div>;
+   return (
+      <Layout>
+         <div>Ministerios</div>
+      </Layout>
+   );
 };

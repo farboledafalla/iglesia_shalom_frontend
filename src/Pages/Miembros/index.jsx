@@ -1,3 +1,10 @@
+// Componentes
+import { Layout } from '../../components/Layout';
+
 export const Miembros = () => {
-   return <div>Miembros</div>;
+   return (
+      <Layout>
+         <div>Miembros</div>
+      </Layout>
+   );
 };
