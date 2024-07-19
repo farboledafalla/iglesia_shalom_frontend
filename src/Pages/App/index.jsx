@@ -1,10 +1,15 @@
+// Componentes React
 import { useRoutes, BrowserRouter } from 'react-router-dom';
 
+// Pages
 import { Home } from '../Home';
 import { Miembros } from '../Miembros';
 import { Ministerios } from '../Ministerios';
 import { MiembrosMinisterios } from '../MiembrosMinisterios';
 import { NotFound } from '../NotFound';
+
+// Componentes
+import { Navbar } from '../../components/Navbar';
 
 import './App.css';
 
@@ -39,6 +44,7 @@ export const App = () => {
    return (
       <BrowserRouter>
          <AppRoutes />
+         <Navbar />
       </BrowserRouter>
    );
 };
