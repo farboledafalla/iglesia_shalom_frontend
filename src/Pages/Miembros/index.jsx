@@ -7,6 +7,8 @@ import { Layout } from '../../components/Layout';
 // Librerias
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
+import { Tooltip } from '@material-ui/core';
 
 // Mensajes pop-pup
 import { ToastContainer, toast } from 'react-toastify';
@@ -158,7 +160,7 @@ export const Miembros = () => {
                   {miembros.map((miembro) => {
                      return (
                         <FilaMiembro
-                           key={miembro.id_miembro}
+                           key={nanoid()}
                            miembro={miembro}
                            onUpdateMiembro={onUpdateMiembro}
                         />
@@ -269,22 +271,42 @@ export const Miembros = () => {
             <td>
                {edit ? (
                   <>
-                     <i
-                        onClick={onUpdateObjetoMiembro}
-                        className='fas fa-check text-green-500 mx-2 cursor-pointer'
-                     />
-                     <i
-                        onClick={onEditMiembro}
-                        className='fas fa-ban text-red-500 mx-2 cursor-pointer'
-                     />
+                     <Tooltip
+                        title='Confirmar Edición'
+                        placement='top-end'
+                        arrow
+                     >
+                        <i
+                           onClick={onUpdateObjetoMiembro}
+                           className='fas fa-check text-green-500 mx-2 cursor-pointer'
+                        />
+                     </Tooltip>
+                     <Tooltip
+                        title='Candelar Edición'
+                        placement='top-start'
+                        arrow
+                     >
+                        <i
+                           onClick={onEditMiembro}
+                           className='fas fa-ban text-red-500 mx-2 cursor-pointer'
+                        />
+                     </Tooltip>
                   </>
                ) : (
                   <>
-                     <i
-                        onClick={onEditMiembro}
-                        className='fas fa-pencil-alt text-yellow-500 mx-2 cursor-pointer'
-                     />
-                     <i className='fas fa-trash text-red-500 mx-2 cursor-pointer' />
+                     <Tooltip title='Editar Miembro' placement='top-end' arrow>
+                        <i
+                           onClick={onEditMiembro}
+                           className='fas fa-pencil-alt text-yellow-500 mx-2 cursor-pointer'
+                        />
+                     </Tooltip>
+                     <Tooltip
+                        title='Eliminar Miembro'
+                        placement='top-start'
+                        arrow
+                     >
+                        <i className='fas fa-trash text-red-500 mx-2 cursor-pointer' />
+                     </Tooltip>
                   </>
                )}
             </td>
