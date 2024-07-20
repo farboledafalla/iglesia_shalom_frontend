@@ -6,6 +6,11 @@ import { Layout } from '../../components/Layout';
 
 // Librerias
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
+// Mensajes pop-pup
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Miembros = () => {
    // Formulario
@@ -42,9 +47,11 @@ export const Miembros = () => {
          .request(config)
          .then((response) => {
             console.log(JSON.stringify(response.data));
+            toast.success('Miembro agregado');
          })
          .catch((error) => {
             console.log(error);
+            toast.error('Error agregando Miembro');
          });
 
       setMostrarTabla(true);
@@ -53,7 +60,41 @@ export const Miembros = () => {
    // Estados
    const [mostrarTabla, setMostrarTabla] = useState(true);
    const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
-   const [colorBoton, setColorBoton] = useState('green');
+   const [colorBoton, setColorBoton] = useState('bg-green-500');
+   const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
+   const [miembros, setMiembros] = useState([]);
+
+   useEffect(() => {
+      const consultarMiembros = async () => {
+         let config = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: 'http://localhost:3000/api/miembros',
+            headers: {},
+         };
+
+         await axios
+            .request(config)
+            .then((response) => {
+               // console.log(JSON.stringify(response.data));
+               setMiembros(response.data);
+               setEjecutarConsulta(false);
+            })
+            .catch((error) => {
+               console.log('Salio un error: ', error);
+            });
+      };
+
+      if (ejecutarConsulta) {
+         consultarMiembros();
+      }
+   }, [ejecutarConsulta]);
+
+   useEffect(() => {
+      if (mostrarTabla) {
+         setEjecutarConsulta(true);
+      }
+   }, [mostrarTabla]);
 
    // Cambiar texto y color botón
    useEffect(() => {
@@ -66,7 +107,7 @@ export const Miembros = () => {
       }
    }, [mostrarTabla]);
 
-   const TablaMiembros = () => {
+   const TablaMiembros = ({ miembros }) => {
       return (
          <div className='flex flex-col items-center justify-center'>
             <h3 className='text-2xl font-extrabold'>Listado de usuarios</h3>
@@ -80,21 +121,28 @@ export const Miembros = () => {
                   </tr>
                </thead>
                <tbody>
-                  <tr>
-                     <td>11111111</td>
-                     <td>Franklim</td>
-                     <td>Arboleda Falla</td>
-                     <td>3208371159</td>
-                  </tr>
-                  <tr>
-                     <td>22222222</td>
-                     <td>Leidy Marcela</td>
-                     <td>Marín Cárdenas</td>
-                     <td>3208480575</td>
-                  </tr>
+                  {miembros.map((miembro) => {
+                     return (
+                        <FilaMiembro
+                           key={miembro.id_miembro}
+                           miembro={miembro}
+                        />
+                     );
+                  })}
                </tbody>
             </table>
          </div>
+      );
+   };
+
+   const FilaMiembro = ({ miembro }) => {
+      return (
+         <tr>
+            <td>{miembro.cedula}</td>
+            <td>{miembro.nombres}</td>
+            <td>{miembro.apellidos}</td>
+            <td>{miembro.celular}</td>
+         </tr>
       );
    };
 
@@ -178,8 +226,18 @@ export const Miembros = () => {
                   {textoBoton}
                </button>
             </div>
-            {mostrarTabla ? <TablaMiembros /> : <FormularioMiembros />}
+            {mostrarTabla ? (
+               <TablaMiembros miembros={miembros} />
+            ) : (
+               <FormularioMiembros />
+            )}
+            <ToastContainer position='bottom-center' autoClose={3000} />
          </div>
       </Layout>
    );
+};
+
+Miembros.propTypes = {
+   miembros: PropTypes.array,
+   miembro: PropTypes.object,
 };
