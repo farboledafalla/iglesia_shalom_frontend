@@ -108,6 +108,39 @@ export const Miembros = () => {
    }, [mostrarTabla]);
 
    const TablaMiembros = ({ miembros }) => {
+      // Actualizar
+      const onUpdateMiembro = async (miembroActualizado) => {
+         let data = JSON.stringify({
+            cedula: miembroActualizado.cedula,
+            nombres: miembroActualizado.nombres,
+            apellidos: miembroActualizado.apellidos,
+            celular: miembroActualizado.celular,
+         });
+
+         let config = {
+            method: 'put',
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/api/miembros/${miembroActualizado.id_miembro}`,
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            data: data,
+         };
+
+         await axios
+            .request(config)
+            .then((response) => {
+               console.log(JSON.stringify(response.data));
+               toast.success('Miembro actualizado');
+               // Para que cargue los nuevos valores
+               setEjecutarConsulta(true);
+            })
+            .catch((error) => {
+               console.log(error);
+               toast.error('Error actualizando Miembro');
+            });
+      };
+
       return (
          <div className='flex flex-col items-center justify-center'>
             <h3 className='text-2xl font-extrabold'>Listado de usuarios</h3>
@@ -118,6 +151,7 @@ export const Miembros = () => {
                      <th>Nombres</th>
                      <th>Apellidos</th>
                      <th>Celular</th>
+                     <th>Acciones</th>
                   </tr>
                </thead>
                <tbody>
@@ -126,6 +160,7 @@ export const Miembros = () => {
                         <FilaMiembro
                            key={miembro.id_miembro}
                            miembro={miembro}
+                           onUpdateMiembro={onUpdateMiembro}
                         />
                      );
                   })}
@@ -135,13 +170,124 @@ export const Miembros = () => {
       );
    };
 
-   const FilaMiembro = ({ miembro }) => {
+   const FilaMiembro = ({ miembro, onUpdateMiembro }) => {
+      // Estados
+      const [edit, setEdit] = useState(false);
+      const [infoNuevoMiembro, setInfoNuevoMiembro] = useState({
+         id_miembro: miembro.id_miembro,
+         cedula: miembro.cedula,
+         nombres: miembro.nombres,
+         apellidos: miembro.apellidos,
+         celular: miembro.celular,
+      });
+
+      // Cambia con el botón editar
+      const onEditMiembro = () => {
+         console.log('id_miembro: ', infoNuevoMiembro.id_miembro);
+         setEdit(!edit);
+      };
+
+      // Guardar los cambios
+      const onUpdatePropiedadCedula = (event) => {
+         setInfoNuevoMiembro({
+            ...infoNuevoMiembro,
+            cedula: event.target.value,
+         });
+      };
+      const onUpdatePropiedadNombres = (event) => {
+         setInfoNuevoMiembro({
+            ...infoNuevoMiembro,
+            nombres: event.target.value,
+         });
+      };
+      const onUpdatePropiedadApellidos = (event) => {
+         setInfoNuevoMiembro({
+            ...infoNuevoMiembro,
+            apellidos: event.target.value,
+         });
+      };
+      const onUpdatePropiedadCelular = (event) => {
+         setInfoNuevoMiembro({
+            ...infoNuevoMiembro,
+            celular: event.target.value,
+         });
+      };
+
+      // Enviar al padre objeto editado
+      const onUpdateObjetoMiembro = () => {
+         onUpdateMiembro(infoNuevoMiembro);
+         setEdit(false);
+      };
+
       return (
          <tr>
-            <td>{miembro.cedula}</td>
-            <td>{miembro.nombres}</td>
-            <td>{miembro.apellidos}</td>
-            <td>{miembro.celular}</td>
+            {edit ? (
+               <>
+                  <td>
+                     <input type='hidden' value={infoNuevoMiembro.id_miembro} />
+                     <input
+                        type='number'
+                        value={infoNuevoMiembro.cedula}
+                        onChange={onUpdatePropiedadCedula}
+                        className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                     />
+                  </td>
+                  <td>
+                     <input
+                        type='text'
+                        value={infoNuevoMiembro.nombres}
+                        onChange={onUpdatePropiedadNombres}
+                        className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                     />
+                  </td>
+                  <td>
+                     <input
+                        type='text'
+                        value={infoNuevoMiembro.apellidos}
+                        onChange={onUpdatePropiedadApellidos}
+                        className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                     />
+                  </td>
+                  <td>
+                     <input
+                        type='number'
+                        value={infoNuevoMiembro.celular}
+                        onChange={onUpdatePropiedadCelular}
+                        className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                     />
+                  </td>
+               </>
+            ) : (
+               <>
+                  <td>{miembro.cedula}</td>
+                  <td>{miembro.nombres}</td>
+                  <td>{miembro.apellidos}</td>
+                  <td>{miembro.celular}</td>
+               </>
+            )}
+
+            <td>
+               {edit ? (
+                  <>
+                     <i
+                        onClick={onUpdateObjetoMiembro}
+                        className='fas fa-check text-green-500 mx-2 cursor-pointer'
+                     />
+                     <i
+                        onClick={onEditMiembro}
+                        className='fas fa-ban text-red-500 mx-2 cursor-pointer'
+                     />
+                  </>
+               ) : (
+                  <>
+                     <i
+                        onClick={onEditMiembro}
+                        className='fas fa-pencil-alt text-yellow-500 mx-2 cursor-pointer'
+                     />
+                     <i className='fas fa-trash text-red-500 mx-2 cursor-pointer' />
+                  </>
+               )}
+            </td>
          </tr>
       );
    };
@@ -153,6 +299,7 @@ export const Miembros = () => {
                Crear Nuevo Miembro
             </h2>
             <form ref={form} name='formMiembro' onSubmit={onSubmitForm}>
+               <input type='hidden' name='id_miembro' id='id_miembro' />
                <label htmlFor='identificacion' className='flex flex-col'>
                   Identificación
                   <input
@@ -240,4 +387,5 @@ export const Miembros = () => {
 Miembros.propTypes = {
    miembros: PropTypes.array,
    miembro: PropTypes.object,
+   onUpdateMiembro: PropTypes.func,
 };
