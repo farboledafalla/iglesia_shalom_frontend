@@ -1,10 +1,55 @@
 // Componentes React
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Componentes
 import { Layout } from '../../components/Layout';
 
+// Librerias
+import axios from 'axios';
+
 export const Miembros = () => {
+   // Formulario
+   const form = useRef(null);
+
+   const onSubmitForm = async (event) => {
+      event.preventDefault();
+
+      const fd = new FormData(form.current);
+      const nuevoMiembro = {};
+
+      fd.forEach((value, key) => {
+         nuevoMiembro[key] = value;
+      });
+
+      let data = JSON.stringify({
+         cedula: nuevoMiembro.identificacion,
+         nombres: nuevoMiembro.nombres,
+         apellidos: nuevoMiembro.apellidos,
+         celular: nuevoMiembro.celular,
+      });
+
+      let config = {
+         method: 'post',
+         maxBodyLength: Infinity,
+         url: 'http://localhost:3000/api/miembros',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         data: data,
+      };
+
+      await axios
+         .request(config)
+         .then((response) => {
+            console.log(JSON.stringify(response.data));
+         })
+         .catch((error) => {
+            console.log(error);
+         });
+
+      setMostrarTabla(true);
+   };
+
    // Estados
    const [mostrarTabla, setMostrarTabla] = useState(true);
    const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
@@ -59,7 +104,7 @@ export const Miembros = () => {
             <h2 className='text-2xl font-extrabold mb-6'>
                Crear Nuevo Miembro
             </h2>
-            <form>
+            <form ref={form} name='formMiembro' onSubmit={onSubmitForm}>
                <label htmlFor='identificacion' className='flex flex-col'>
                   Identificación
                   <input
