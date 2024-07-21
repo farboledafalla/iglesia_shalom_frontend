@@ -9,6 +9,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
 
 // Mensajes pop-pup
 import { ToastContainer, toast } from 'react-toastify';
@@ -143,6 +144,32 @@ export const Miembros = () => {
             });
       };
 
+      // Eliminar
+      const onDeleteMiembro = async (miembroAEliminar) => {
+         let data = '';
+
+         let config = {
+            method: 'delete',
+            maxBodyLength: Infinity,
+            url: `http://localhost:3000/api/miembros/${miembroAEliminar.id_miembro}`,
+            headers: {},
+            data: data,
+         };
+
+         await axios
+            .request(config)
+            .then((response) => {
+               console.log(JSON.stringify(response.data));
+               toast.success('Miembro Eliminado');
+               // Para que cargue los nuevos valores
+               setEjecutarConsulta(true);
+            })
+            .catch((error) => {
+               console.log(error);
+               toast.error('Error eliminando Miembro');
+            });
+      };
+
       return (
          <div className='flex flex-col items-center justify-center'>
             <h3 className='text-2xl font-extrabold'>Listado de usuarios</h3>
@@ -163,6 +190,7 @@ export const Miembros = () => {
                            key={nanoid()}
                            miembro={miembro}
                            onUpdateMiembro={onUpdateMiembro}
+                           onDeleteMiembro={onDeleteMiembro}
                         />
                      );
                   })}
@@ -172,9 +200,10 @@ export const Miembros = () => {
       );
    };
 
-   const FilaMiembro = ({ miembro, onUpdateMiembro }) => {
+   const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
       // Estados
       const [edit, setEdit] = useState(false);
+      const [openDialog, setOpenDialog] = useState(false);
       const [infoNuevoMiembro, setInfoNuevoMiembro] = useState({
          id_miembro: miembro.id_miembro,
          cedula: miembro.cedula,
@@ -219,6 +248,11 @@ export const Miembros = () => {
       const onUpdateObjetoMiembro = () => {
          onUpdateMiembro(infoNuevoMiembro);
          setEdit(false);
+      };
+
+      // Enviar al padre objeto para eliminar
+      const onDeleteObjetoMiembro = () => {
+         onDeleteMiembro(infoNuevoMiembro);
       };
 
       return (
@@ -305,10 +339,34 @@ export const Miembros = () => {
                         placement='top-start'
                         arrow
                      >
-                        <i className='fas fa-trash text-red-500 mx-2 cursor-pointer' />
+                        <i
+                           onClick={() => setOpenDialog(true)}
+                           className='fas fa-trash text-red-500 mx-2 cursor-pointer'
+                        />
                      </Tooltip>
                   </>
                )}
+               <Dialog open={openDialog}>
+                  <div className='p-8 flex flex-col'>
+                     <h1 className='text-gray-900 text-2xl font-bold'>
+                        ¿Seguro de eliminar el Miembro?
+                     </h1>
+                     <div className='flex w-full items-center justify-center my-4'>
+                        <button
+                           onClick={onDeleteObjetoMiembro}
+                           className='mx-2 px-4 py-2 bg-green-500 text-white hover:bg-green-700 rounded-md shadow-md'
+                        >
+                           Si
+                        </button>
+                        <button
+                           onClick={() => setOpenDialog(false)}
+                           className='mx-2 px-4 py-2 bg-red-500 text-white hover:bg-red-700 rounded-md shadow-md'
+                        >
+                           No
+                        </button>
+                     </div>
+                  </div>
+               </Dialog>
             </td>
          </tr>
       );
@@ -410,4 +468,5 @@ Miembros.propTypes = {
    miembros: PropTypes.array,
    miembro: PropTypes.object,
    onUpdateMiembro: PropTypes.func,
+   onDeleteMiembro: PropTypes.func,
 };
