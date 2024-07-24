@@ -18,6 +18,14 @@ import { Dialog } from '@material-ui/core';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// API
+import {
+   consultarMiembrosAPI,
+   insertarMiembroAPI,
+   editarMiembroAPI,
+   eliminarMiembroAPI,
+} from '../../utils/api';
+
 export const Miembros = () => {
    // Crear contexto
    const context = useContext(ShalomContext);
@@ -34,57 +42,38 @@ export const Miembros = () => {
       fd.forEach((value, key) => {
          nuevoMiembro[key] = value;
       });
-
-      let data = JSON.stringify({
-         cedula: nuevoMiembro.identificacion,
-         nombres: nuevoMiembro.nombres,
-         apellidos: nuevoMiembro.apellidos,
-         celular: nuevoMiembro.celular,
-      });
-
-      let config = {
-         method: 'post',
-         maxBodyLength: Infinity,
-         url: 'http://localhost:3000/api/miembros',
-         headers: {
-            'Content-Type': 'application/json',
+      await insertarMiembroAPI(
+         {
+            cedula: nuevoMiembro.identificacion,
+            nombres: nuevoMiembro.nombres,
+            apellidos: nuevoMiembro.apellidos,
+            celular: nuevoMiembro.celular,
          },
-         data: data,
-      };
-
-      await axios
-         .request(config)
-         .then((response) => {
+         (response) => {
             console.log(JSON.stringify(response.data));
             toast.success('Miembro agregado');
-         })
-         .catch((error) => {
+         },
+         (error) => {
             console.log(error);
             toast.error('Error agregando Miembro');
-         });
+         }
+      );
 
       context.setMostrarTabla(true);
    };
 
    useEffect(() => {
       const consultarMiembros = async () => {
-         let config = {
-            method: 'get',
-            maxBodyLength: Infinity,
-            url: 'http://localhost:3000/api/miembros',
-            headers: {},
-         };
-
-         await axios
-            .request(config)
-            .then((response) => {
+         await consultarMiembrosAPI(
+            (response) => {
                // console.log(JSON.stringify(response.data));
                context.setMiembros(response.data);
                context.setEjecutarConsulta(false);
-            })
-            .catch((error) => {
+            },
+            (error) => {
                console.log('Salio un error: ', error);
-            });
+            }
+         );
       };
 
       if (context.ejecutarConsulta) {
@@ -112,61 +101,42 @@ export const Miembros = () => {
    const TablaMiembros = ({ miembros }) => {
       // Actualizar
       const onUpdateMiembro = async (miembroActualizado) => {
-         let data = JSON.stringify({
-            cedula: miembroActualizado.cedula,
-            nombres: miembroActualizado.nombres,
-            apellidos: miembroActualizado.apellidos,
-            celular: miembroActualizado.celular,
-         });
-
-         let config = {
-            method: 'put',
-            maxBodyLength: Infinity,
-            url: `http://localhost:3000/api/miembros/${miembroActualizado.id_miembro}`,
-            headers: {
-               'Content-Type': 'application/json',
+         await editarMiembroAPI(
+            miembroActualizado.id_miembro,
+            {
+               cedula: miembroActualizado.cedula,
+               nombres: miembroActualizado.nombres,
+               apellidos: miembroActualizado.apellidos,
+               celular: miembroActualizado.celular,
             },
-            data: data,
-         };
-
-         await axios
-            .request(config)
-            .then((response) => {
+            (response) => {
                console.log(JSON.stringify(response.data));
                toast.success('Miembro actualizado');
                // Para que cargue los nuevos valores
                context.setEjecutarConsulta(true);
-            })
-            .catch((error) => {
+            },
+            (error) => {
                console.log(error);
                toast.error('Error actualizando Miembro');
-            });
+            }
+         );
       };
 
       // Eliminar
       const onDeleteMiembro = async (miembroAEliminar) => {
-         let data = '';
-
-         let config = {
-            method: 'delete',
-            maxBodyLength: Infinity,
-            url: `http://localhost:3000/api/miembros/${miembroAEliminar.id_miembro}`,
-            headers: {},
-            data: data,
-         };
-
-         await axios
-            .request(config)
-            .then((response) => {
+         await eliminarMiembroAPI(
+            miembroAEliminar.id_miembro,
+            (response) => {
                console.log(JSON.stringify(response.data));
                toast.success('Miembro Eliminado');
                // Para que cargue los nuevos valores
                context.setEjecutarConsulta(true);
-            })
-            .catch((error) => {
+            },
+            (error) => {
                console.log(error);
                toast.error('Error eliminando Miembro');
-            });
+            }
+         );
       };
 
       return (
