@@ -1,6 +1,9 @@
 // Componentes React
 import { useRoutes, BrowserRouter } from 'react-router-dom';
 
+// Contexto
+import { ShalomProvider } from '../../Context/';
+
 // Pages
 import { Home } from '../Home';
 import { Miembros } from '../Miembros';
@@ -42,9 +45,12 @@ const AppRoutes = () => {
 
 export const App = () => {
    return (
-      <BrowserRouter>
-         <AppRoutes />
-         <Navbar />
-      </BrowserRouter>
+      <ShalomProvider>
+         <BrowserRouter>
+            <AppRoutes />
+            <Navbar />
+         </BrowserRouter>
+      </ShalomProvider>
    );
 };
+   

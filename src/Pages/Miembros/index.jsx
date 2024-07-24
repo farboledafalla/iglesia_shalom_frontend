@@ -1,5 +1,8 @@
 // Componentes React
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+
+// Contexto
+import { ShalomContext } from '../../Context';
 
 // Componentes
 import { Layout } from '../../components/Layout';
@@ -16,6 +19,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Miembros = () => {
+   // Crear contexto
+   const context = useContext(ShalomContext);
+
    // Formulario
    const form = useRef(null);
 
@@ -57,15 +63,15 @@ export const Miembros = () => {
             toast.error('Error agregando Miembro');
          });
 
-      setMostrarTabla(true);
+      context.setMostrarTabla(true);
    };
 
    // Estados
-   const [mostrarTabla, setMostrarTabla] = useState(true);
-   const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
-   const [colorBoton, setColorBoton] = useState('bg-green-500');
-   const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
-   const [miembros, setMiembros] = useState([]);
+   // const [mostrarTabla, setMostrarTabla] = useState(true);
+   // const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
+   // const [colorBoton, setColorBoton] = useState('bg-green-500');
+   // const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
+   // const [miembros, setMiembros] = useState([]);
 
    useEffect(() => {
       const consultarMiembros = async () => {
@@ -80,35 +86,35 @@ export const Miembros = () => {
             .request(config)
             .then((response) => {
                // console.log(JSON.stringify(response.data));
-               setMiembros(response.data);
-               setEjecutarConsulta(false);
+               context.setMiembros(response.data);
+               context.setEjecutarConsulta(false);
             })
             .catch((error) => {
                console.log('Salio un error: ', error);
             });
       };
 
-      if (ejecutarConsulta) {
+      if (context.ejecutarConsulta) {
          consultarMiembros();
       }
-   }, [ejecutarConsulta]);
+   }, [context.ejecutarConsulta]);
 
    useEffect(() => {
-      if (mostrarTabla) {
-         setEjecutarConsulta(true);
+      if (context.mostrarTabla) {
+         context.setEjecutarConsulta(true);
       }
-   }, [mostrarTabla]);
+   }, [context.mostrarTabla]);
 
    // Cambiar texto y color botón
    useEffect(() => {
-      if (mostrarTabla) {
-         setTextoBoton('Agregar Miembro');
-         setColorBoton('bg-green-500');
+      if (context.mostrarTabla) {
+         context.setTextoBoton('Agregar Miembro');
+         context.setColorBoton('bg-green-500');
       } else {
-         setTextoBoton('Mostrar Miembros');
-         setColorBoton('bg-indigo-500');
+         context.setTextoBoton('Mostrar Miembros');
+         context.setColorBoton('bg-indigo-500');
       }
-   }, [mostrarTabla]);
+   }, [context.mostrarTabla]);
 
    const TablaMiembros = ({ miembros }) => {
       // Actualizar
@@ -136,7 +142,7 @@ export const Miembros = () => {
                console.log(JSON.stringify(response.data));
                toast.success('Miembro actualizado');
                // Para que cargue los nuevos valores
-               setEjecutarConsulta(true);
+               context.setEjecutarConsulta(true);
             })
             .catch((error) => {
                console.log(error);
@@ -162,7 +168,7 @@ export const Miembros = () => {
                console.log(JSON.stringify(response.data));
                toast.success('Miembro Eliminado');
                // Para que cargue los nuevos valores
-               setEjecutarConsulta(true);
+               context.setEjecutarConsulta(true);
             })
             .catch((error) => {
                console.log(error);
@@ -446,15 +452,15 @@ export const Miembros = () => {
                </h2>
                <button
                   onClick={() => {
-                     setMostrarTabla(!mostrarTabla);
+                     context.setMostrarTabla(!context.mostrarTabla);
                   }}
-                  className={`${colorBoton} text-white rounded-full p-5 mt-6 h-28 w-28 self-end`}
+                  className={`${context.colorBoton} text-white rounded-full p-5 mt-6 h-28 w-28 self-end`}
                >
-                  {textoBoton}
+                  {context.textoBoton}
                </button>
             </div>
-            {mostrarTabla ? (
-               <TablaMiembros miembros={miembros} />
+            {context.mostrarTabla ? (
+               <TablaMiembros miembros={context.miembros} />
             ) : (
                <FormularioMiembros />
             )}
