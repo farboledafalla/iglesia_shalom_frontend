@@ -8,7 +8,6 @@ import { ShalomContext } from '../../Context';
 import { Layout } from '../../components/Layout';
 
 // Librerias
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { Tooltip } from '@material-ui/core';
