@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 export const ShalomContext = createContext();
 
 export const ShalomProvider = ({ children }) => {
-   // Estados
+   // Estados componente Miembros
    const [mostrarTabla, setMostrarTabla] = useState(true);
    const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
    const [colorBoton, setColorBoton] = useState('bg-green-500');

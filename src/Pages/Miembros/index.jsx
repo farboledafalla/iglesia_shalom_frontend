@@ -66,13 +66,6 @@ export const Miembros = () => {
       context.setMostrarTabla(true);
    };
 
-   // Estados
-   // const [mostrarTabla, setMostrarTabla] = useState(true);
-   // const [textoBoton, setTextoBoton] = useState('Agregar Miembro');
-   // const [colorBoton, setColorBoton] = useState('bg-green-500');
-   // const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
-   // const [miembros, setMiembros] = useState([]);
-
    useEffect(() => {
       const consultarMiembros = async () => {
          let config = {
