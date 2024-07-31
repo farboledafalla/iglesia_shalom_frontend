@@ -6,15 +6,20 @@ import PropTypes from 'prop-types';
 import { Tooltip } from '@material-ui/core';
 import { Dialog } from '@material-ui/core';
 
-export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
+export const FilaMinisterio = ({
+   ministerio,
+   onUpdateMinisterio,
+   onDeleteMinisterio,
+}) => {
    // Estados
-   const [localMiembro, setLocalMiembro] = useState(miembro);
+   const [localMinisterio, setLocalMinisterio] = useState(ministerio);
    const [edit, setEdit] = useState(false);
    const [openDialog, setOpenDialog] = useState(false);
 
+   // Inicializar estado local
    useEffect(() => {
-      setLocalMiembro(miembro);
-   }, [miembro]);
+      setLocalMinisterio(ministerio);
+   }, [ministerio]);
 
    // Cambia con el botón editar
    const handleEditToggle = () => {
@@ -24,23 +29,20 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
    // Guardar los cambios
    const handleInputChange = (event) => {
       const { name, value } = event.target;
-      setLocalMiembro({
-         ...localMiembro,
+      setLocalMinisterio({
+         ...localMinisterio,
          [name]: value,
       });
    };
 
-   // Enviar al padre objeto editado
-   const handleUpdate = () => {
-      onUpdateMiembro(localMiembro);
-      setEdit(false);
+   const handleDelete = () => {
+      console.log('hadleDelete');
+      onDeleteMinisterio(localMinisterio);
    };
 
-   // Enviar al padre objeto para eliminar
-   const handleDelete = () => {
-      onDeleteMiembro(localMiembro);
-      // Para que no se vuelva a mostrar cuando elimina un registro
-      // setOpenDialog(false);
+   const handleUpdate = () => {
+      console.log('handleUpdate');
+      onUpdateMinisterio(localMinisterio);
    };
 
    return (
@@ -48,11 +50,11 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
          {edit ? (
             <>
                <td>
-                  <input type='hidden' value={localMiembro.id_miembro} />
+                  <input type='hidden' value={localMinisterio.id_ministerio} />
                   <input
-                     type='number'
-                     name='cedula'
-                     value={localMiembro.cedula}
+                     type='text'
+                     name='nombre'
+                     value={localMinisterio.nombre}
                      onChange={handleInputChange}
                      className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                   />
@@ -60,26 +62,8 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
                <td>
                   <input
                      type='text'
-                     name='nombres'
-                     value={localMiembro.nombres}
-                     onChange={handleInputChange}
-                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
-                  />
-               </td>
-               <td>
-                  <input
-                     type='text'
-                     name='apellidos'
-                     value={localMiembro.apellidos}
-                     onChange={handleInputChange}
-                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
-                  />
-               </td>
-               <td>
-                  <input
-                     type='number'
-                     name='celular'
-                     value={localMiembro.celular}
+                     name='descripcion'
+                     value={localMinisterio.descripcion}
                      onChange={handleInputChange}
                      className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                   />
@@ -87,10 +71,8 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
             </>
          ) : (
             <>
-               <td>{miembro.cedula}</td>
-               <td>{miembro.nombres}</td>
-               <td>{miembro.apellidos}</td>
-               <td>{miembro.celular}</td>
+               <td>{ministerio.nombre}</td>
+               <td>{ministerio.descripcion}</td>
             </>
          )}
 
@@ -112,13 +94,17 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
                </>
             ) : (
                <>
-                  <Tooltip title='Editar Miembro' placement='top-end' arrow>
+                  <Tooltip title='Editar Ministerio' placement='top-end' arrow>
                      <i
                         onClick={handleEditToggle}
                         className='fas fa-pencil-alt text-yellow-500 mx-2 cursor-pointer'
                      />
                   </Tooltip>
-                  <Tooltip title='Eliminar Miembro' placement='top-start' arrow>
+                  <Tooltip
+                     title='Eliminar Ministerio'
+                     placement='top-start'
+                     arrow
+                  >
                      <i
                         onClick={() => setOpenDialog(true)}
                         className='fas fa-trash text-red-500 mx-2 cursor-pointer'
@@ -129,7 +115,7 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
             <Dialog open={openDialog}>
                <div className='p-8 flex flex-col'>
                   <h1 className='text-gray-900 text-2xl font-bold'>
-                     ¿Seguro de eliminar el Miembro?
+                     ¿Seguro de eliminar el Ministerio?
                   </h1>
                   <div className='flex w-full items-center justify-center my-4'>
                      <button
@@ -152,8 +138,8 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
    );
 };
 
-FilaMiembro.propTypes = {
-   miembro: PropTypes.object,
-   onUpdateMiembro: PropTypes.func,
-   onDeleteMiembro: PropTypes.func,
+FilaMinisterio.propTypes = {
+   ministerio: PropTypes.object,
+   onUpdateMinisterio: PropTypes.func,
+   onDeleteMinisterio: PropTypes.func,
 };

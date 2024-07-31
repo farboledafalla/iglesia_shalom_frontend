@@ -4,6 +4,10 @@ import axios from 'axios';
 // URL base
 const baseURL = 'http://localhost:3000/api';
 
+/****************************************************
+ *                  Miembros
+ ***************************************************/
+
 // Consultar Miembros
 export const consultarMiembrosAPI = async (successCallback, errorCallback) => {
    const config = {
@@ -55,6 +59,7 @@ export const editarMiembroAPI = async (
    await axios.request(config).then(successCallback).catch(errorCallback);
 };
 
+// Eliminar Miembro
 export const eliminarMiembroAPI = async (
    id,
    successCallback,
@@ -64,6 +69,80 @@ export const eliminarMiembroAPI = async (
       method: 'delete',
       maxBodyLength: Infinity,
       url: `${baseURL}/miembros/${id}`,
+      headers: {},
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+/****************************************************
+ *                  Miembros
+ ***************************************************/
+
+// Consultar Ministerios
+export const consultarMinisteriosAPI = async (
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios`,
+      headers: {},
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Insertar Miembro
+export const insertarMinisterioAPI = async (
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Editar Ministerio
+export const editarMinisterioAPI = async (
+   id,
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios/${id}`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Eliminar Ministerio
+export const eliminarMinisterioAPI = async (
+   id,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios/${id}`,
       headers: {},
    };
 
