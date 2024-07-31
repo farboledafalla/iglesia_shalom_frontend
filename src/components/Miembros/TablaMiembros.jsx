@@ -64,7 +64,7 @@ export const TablaMiembros = ({ miembros }) => {
 
    return (
       <div className='flex flex-col items-center justify-center'>
-         <h3 className='text-2xl font-extrabold'>Listado de Usuarios</h3>
+         <h3 className='text-2xl font-extrabold'>Listado de Miembros</h3>
          <table className='tabla'>
             <thead>
                <tr>

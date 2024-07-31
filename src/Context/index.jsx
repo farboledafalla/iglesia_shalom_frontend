@@ -21,6 +21,14 @@ export const ShalomProvider = ({ children }) => {
    const [ejecutarConsultaMin, setEjecutarConsultaMin] = useState(true);
    const [ministerios, setMinisterios] = useState([]);
 
+   // Estados componente Miembros - Ministerios
+   const [mostrarTablaMieMin, setMostrarTablaMieMin] = useState(true);
+   const [textoBotonMieMin, setTextoBotonMieMin] =
+      useState('Miembro Ministerio');
+   const [colorBotonMieMin, setColorBotonMieMin] = useState('bg-green-500');
+   const [ejecutarConsultaMieMin, setEjecutarConsultaMieMin] = useState(true);
+   const [miembrosMinisterios, setMiembrosMinisterios] = useState([]);
+
    return (
       <ShalomContext.Provider
          value={{
@@ -44,6 +52,16 @@ export const ShalomProvider = ({ children }) => {
             setEjecutarConsultaMin,
             ministerios,
             setMinisterios,
+            mostrarTablaMieMin,
+            setMostrarTablaMieMin,
+            textoBotonMieMin,
+            setTextoBotonMieMin,
+            colorBotonMieMin,
+            setColorBotonMieMin,
+            ejecutarConsultaMieMin,
+            setEjecutarConsultaMieMin,
+            miembrosMinisterios,
+            setMiembrosMinisterios,
          }}
       >
          {children}

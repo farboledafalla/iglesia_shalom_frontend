@@ -148,3 +148,22 @@ export const eliminarMinisterioAPI = async (
 
    await axios.request(config).then(successCallback).catch(errorCallback);
 };
+
+/****************************************************
+ *              Miembros - Ministerios
+ ***************************************************/
+
+// Consultar Miembros
+export const consultarMiembrosMinisteriosAPI = async (
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/miem-mini`,
+      headers: {},
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
