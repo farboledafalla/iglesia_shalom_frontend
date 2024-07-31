@@ -6,7 +6,11 @@ import PropTypes from 'prop-types';
 import { Tooltip } from '@material-ui/core';
 import { Dialog } from '@material-ui/core';
 
-export const FilaMinisterio = ({ ministerio }) => {
+export const FilaMinisterio = ({
+   ministerio,
+   onUpdateMinisterio,
+   onDeleteMinisterio,
+}) => {
    // Estados
    const [localMinisterio, setLocalMinisterio] = useState(ministerio);
    const [edit, setEdit] = useState(false);
@@ -33,10 +37,12 @@ export const FilaMinisterio = ({ ministerio }) => {
 
    const handleDelete = () => {
       console.log('hadleDelete');
+      onDeleteMinisterio(localMinisterio);
    };
 
    const handleUpdate = () => {
       console.log('handleUpdate');
+      onUpdateMinisterio(localMinisterio);
    };
 
    return (
@@ -134,6 +140,6 @@ export const FilaMinisterio = ({ ministerio }) => {
 
 FilaMinisterio.propTypes = {
    ministerio: PropTypes.object,
-   // onUpdateMiembro: PropTypes.func,
-   // onDeleteMiembro: PropTypes.func,
+   onUpdateMinisterio: PropTypes.func,
+   onDeleteMinisterio: PropTypes.func,
 };

@@ -59,6 +59,7 @@ export const editarMiembroAPI = async (
    await axios.request(config).then(successCallback).catch(errorCallback);
 };
 
+// Eliminar Miembro
 export const eliminarMiembroAPI = async (
    id,
    successCallback,
@@ -107,6 +108,42 @@ export const insertarMinisterioAPI = async (
          'Content-Type': 'application/json',
       },
       data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Editar Ministerio
+export const editarMinisterioAPI = async (
+   id,
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios/${id}`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Eliminar Ministerio
+export const eliminarMinisterioAPI = async (
+   id,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'delete',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios/${id}`,
+      headers: {},
    };
 
    await axios.request(config).then(successCallback).catch(errorCallback);

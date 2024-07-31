@@ -40,7 +40,7 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
    const handleDelete = () => {
       onDeleteMiembro(localMiembro);
       // Para que no se vuelva a mostrar cuando elimina un registro
-      setOpenDialog(false);
+      // setOpenDialog(false);
    };
 
    return (
