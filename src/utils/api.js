@@ -4,6 +4,10 @@ import axios from 'axios';
 // URL base
 const baseURL = 'http://localhost:3000/api';
 
+/****************************************************
+ *                  Miembros
+ ***************************************************/
+
 // Consultar Miembros
 export const consultarMiembrosAPI = async (successCallback, errorCallback) => {
    const config = {
@@ -65,6 +69,44 @@ export const eliminarMiembroAPI = async (
       maxBodyLength: Infinity,
       url: `${baseURL}/miembros/${id}`,
       headers: {},
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+/****************************************************
+ *                  Miembros
+ ***************************************************/
+
+// Consultar Ministerios
+export const consultarMinisteriosAPI = async (
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios`,
+      headers: {},
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Insertar Miembro
+export const insertarMinisterioAPI = async (
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/ministerios`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
    };
 
    await axios.request(config).then(successCallback).catch(errorCallback);
