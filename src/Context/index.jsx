@@ -23,8 +23,7 @@ export const ShalomProvider = ({ children }) => {
 
    // Estados componente Miembros - Ministerios
    const [mostrarTablaMieMin, setMostrarTablaMieMin] = useState(true);
-   const [textoBotonMieMin, setTextoBotonMieMin] =
-      useState('Miembro Ministerio');
+   const [textoBotonMieMin, setTextoBotonMieMin] = useState('Agregar Registro');
    const [colorBotonMieMin, setColorBotonMieMin] = useState('bg-green-500');
    const [ejecutarConsultaMieMin, setEjecutarConsultaMieMin] = useState(true);
    const [miembrosMinisterios, setMiembrosMinisterios] = useState([]);
