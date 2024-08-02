@@ -167,3 +167,22 @@ export const consultarMiembrosMinisteriosAPI = async (
 
    await axios.request(config).then(successCallback).catch(errorCallback);
 };
+
+// Insertar Miembro - Ministerio
+export const insertarMiembroMinisterioAPI = async (
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/miem-mini`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};

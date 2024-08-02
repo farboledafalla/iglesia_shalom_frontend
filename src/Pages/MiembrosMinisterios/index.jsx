@@ -47,12 +47,23 @@ export const MiembrosMinisterios = () => {
       }
    }, [context.mostrarTablaMieMin]);
 
+   // Cambiar texto y color botón
+   useEffect(() => {
+      if (context.mostrarTablaMieMin) {
+         context.setTextoBotonMieMin('Agregar Miembro Ministerio');
+         context.setColorBotonMieMin('bg-green-500');
+      } else {
+         context.setTextoBotonMieMin('Mostrar Miembros Ministerios');
+         context.setColorBotonMieMin('bg-indigo-500');
+      }
+   }, [context.mostrarTablaMieMin]);
+
    return (
       <Layout>
          <div className='flex flex-col h-full w-full items-center justify-center'>
             <div className='flex flex-col mb-12'>
                <h2 className='text-3xl font-extrabold text-center'>
-                  Miembros - Ministerios
+                  Administración de Miembros - Ministerios
                </h2>
                <button
                   onClick={() => {
