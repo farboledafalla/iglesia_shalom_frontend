@@ -156,7 +156,13 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                           'YYYY-MM-DD HH:MM:SS'
                        )}
                </td>
-               <td>{miembroMinisterio.fecha_retiro}</td>
+               <td>
+                  {miembroMinisterio.fecha_retiro === null
+                     ? miembroMinisterio.fecha_retiro
+                     : moment(miembroMinisterio.fecha_retiro).format(
+                          'YYYY-MM-DD HH:MM:SS'
+                       )}
+               </td>
             </>
          )}
 
