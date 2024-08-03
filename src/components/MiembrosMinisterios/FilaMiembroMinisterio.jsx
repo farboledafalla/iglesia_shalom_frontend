@@ -34,6 +34,7 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
    const [ministeriosLocal, setMinisteriosLocal] = useState([]);
    const [ministerioInicial, setMinisterioInicial] = useState('');
    const [ministerioFinal, setMinisterioFinal] = useState('');
+   const [fechaIngreso, setFechaIngreso] = useState('');
 
    // Actualizar
    const onUpdateMiembroMinisterio = async () => {
@@ -64,7 +65,7 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       setEdit(!edit);
    };
 
-   // Guardar los cambios
+   // Guardar los cambios al editar
    const handleInputChange = (event) => {
       const { name, value } = event.target;
       setLocalMiembroMinisterio({
@@ -104,26 +105,49 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       if (edit) {
          setMinisterioInicial(miembroMinisterio.id_ministerio);
          setMinisterioFinal(miembroMinisterio.id_ministerio);
+         setFechaIngreso(formatDate(miembroMinisterio.fecha_ingreso));
          consultarMinisterios();
       }
    }, [edit]);
+
+   // Formatear fecha
+   const formatDate = (dateStr) => {
+      return moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
+   };
 
    return (
       <tr>
          {edit ? (
             <>
                <td>
-                  {/* <input type='hidden' value={miembroMinisterio.id_miembro} /> */}
                   <input
                      type='text'
                      name='nombre_completo'
                      readOnly
                      value={miembroMinisterio.nombre_completo}
-                     onChange={handleInputChange}
                      className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                   />
                </td>
                <td>
+                  <input
+                     type='text'
+                     name='id_ministerio'
+                     readOnly
+                     value={miembroMinisterio.nombre}
+                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                  />
+               </td>
+               <td>
+                  <input
+                     type='datetime-local'
+                     id='fecha_ingreso'
+                     name='fecha_ingreso'
+                     value={fechaIngreso}
+                     onChange={handleInputChange}
+                  ></input>
+               </td>
+               <td></td>
+               {/* <td>
                   <select
                      id='id_ministerio'
                      name='id_ministerio'
@@ -143,7 +167,7 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                         </option>
                      ))}
                   </select>
-               </td>
+               </td> */}
             </>
          ) : (
             <>
@@ -152,16 +176,12 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                <td>
                   {miembroMinisterio.fecha_ingreso === null
                      ? miembroMinisterio.fecha_ingreso
-                     : moment(miembroMinisterio.fecha_ingreso).format(
-                          'YYYY-MM-DD HH:MM:SS'
-                       )}
+                     : formatDate(miembroMinisterio.fecha_ingreso)}
                </td>
                <td>
                   {miembroMinisterio.fecha_retiro === null
                      ? miembroMinisterio.fecha_retiro
-                     : moment(miembroMinisterio.fecha_retiro).format(
-                          'YYYY-MM-DD HH:MM:SS'
-                       )}
+                     : formatDate(miembroMinisterio.fecha_retiro)}
                </td>
             </>
          )}
