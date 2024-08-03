@@ -186,3 +186,23 @@ export const insertarMiembroMinisterioAPI = async (
 
    await axios.request(config).then(successCallback).catch(errorCallback);
 };
+
+// Editar Ministerio
+export const editarMiembroMinisterioAPI = async (
+   id,
+   data,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/miem-mini/${id}`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+      data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};

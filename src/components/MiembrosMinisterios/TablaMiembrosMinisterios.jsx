@@ -16,6 +16,8 @@ export const TablaMiembrosMinisterios = ({ miembrosMinisterios }) => {
                <tr>
                   <th>Miembro</th>
                   <th>Ministerio</th>
+                  <th>Ingreso</th>
+                  <th>Retiro</th>
                   <th>Acciones</th>
                   {/* <th>Apellidos</th>
                   <th>Celular</th> */}
