@@ -37,8 +37,6 @@ export const FormularioMiembrosMinisterios = () => {
          nuevoMiembroMinisterio[key] = value;
       });
 
-      console.log('Registro', nuevoMiembroMinisterio);
-
       await insertarMiembroMinisterioAPI(
          {
             id_miembro: nuevoMiembroMinisterio.id_miembro,

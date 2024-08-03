@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 // Librerias
 import PropTypes from 'prop-types';
-import { Tooltip } from '@material-ui/core';
-import { Dialog } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
+import { Dialog } from '@mui/material';
 
 export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
    // Estados

@@ -1,17 +1,60 @@
 // Componentes React
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+
+// Contexto
+import { ShalomContext } from '../../Context';
+
+import {
+   consultarMinisteriosAPI,
+   editarMiembroMinisterioAPI,
+} from '../../utils/api';
 
 // Librerias
 import PropTypes from 'prop-types';
-import { Tooltip } from '@material-ui/core';
-import { Dialog } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
+import { Dialog } from '@mui/material';
+import { nanoid } from 'nanoid';
+
+// Mensajes pop-pup
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Tratamiento de fecha
+import moment from 'moment';
 
 export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
+   // Crear contexto
+   const context = useContext(ShalomContext);
+
    // Estados
    const [localMiembroMinisterio, setLocalMiembroMinisterio] =
       useState(miembroMinisterio);
    const [edit, setEdit] = useState(false);
    const [openDialog, setOpenDialog] = useState(false);
+   const [ministeriosLocal, setMinisteriosLocal] = useState([]);
+   const [ministerioInicial, setMinisterioInicial] = useState('');
+   const [ministerioFinal, setMinisterioFinal] = useState('');
+
+   // Actualizar
+   const onUpdateMiembroMinisterio = async () => {
+      await editarMiembroMinisterioAPI(
+         ministerioInicial,
+         {
+            id_miembro: miembroMinisterio.id_miembro,
+            id_ministerio: ministerioFinal,
+         },
+         (response) => {
+            console.log(JSON.stringify(response.data));
+            toast.success('Registro actualizado');
+            // Para que cargue los nuevos valores
+            context.setEjecutarConsultaMieMin(true);
+         },
+         (error) => {
+            console.log(error);
+            toast.error('Error actualizando Miembro');
+         }
+      );
+   };
 
    useEffect(() => {
       setLocalMiembroMinisterio(miembroMinisterio);
@@ -21,9 +64,19 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       setEdit(!edit);
    };
 
+   // Guardar los cambios
+   const handleInputChange = (event) => {
+      const { name, value } = event.target;
+      setLocalMiembroMinisterio({
+         ...localMiembroMinisterio,
+         [name]: value,
+      });
+   };
+
    // Enviar al padre objeto editado
    const handleUpdate = () => {
       console.log('Hola desde handleUpdate');
+      onUpdateMiembroMinisterio();
       setEdit(false);
    };
 
@@ -33,12 +86,79 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       setOpenDialog(false);
    };
 
+   // Consultar Ministerios para llenar select
+   useEffect(() => {
+      const consultarMinisterios = async () => {
+         await consultarMinisteriosAPI(
+            (response) => {
+               console.log(JSON.stringify(response.data));
+               setMinisteriosLocal(response.data);
+               // const defaultOption = response.data.find(option => option.id_ministerio === )
+            },
+            (error) => {
+               console.log('Salio un error: ', error);
+            }
+         );
+      };
+
+      if (edit) {
+         setMinisterioInicial(miembroMinisterio.id_ministerio);
+         setMinisterioFinal(miembroMinisterio.id_ministerio);
+         consultarMinisterios();
+      }
+   }, [edit]);
+
    return (
       <tr>
-         <td>{miembroMinisterio.nombre_completo}</td>
-         <td>{miembroMinisterio.nombre}</td>
-         {/* <td>{miembroMinisterio.id_ministerio}</td>
-         <td>{miembroMinisterio.nombre}</td> */}
+         {edit ? (
+            <>
+               <td>
+                  {/* <input type='hidden' value={miembroMinisterio.id_miembro} /> */}
+                  <input
+                     type='text'
+                     name='nombre_completo'
+                     readOnly
+                     value={miembroMinisterio.nombre_completo}
+                     onChange={handleInputChange}
+                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                  />
+               </td>
+               <td>
+                  <select
+                     id='id_ministerio'
+                     name='id_ministerio'
+                     value={ministerioFinal}
+                     onChange={(e) => setMinisterioFinal(e.target.value)}
+                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                  >
+                     <option disabled selected>
+                        Seleccione
+                     </option>
+                     {ministeriosLocal.map((ministerioLocal) => (
+                        <option
+                           key={nanoid()}
+                           value={ministerioLocal.id_ministerio}
+                        >
+                           {ministerioLocal.nombre}
+                        </option>
+                     ))}
+                  </select>
+               </td>
+            </>
+         ) : (
+            <>
+               <td>{miembroMinisterio.nombre_completo}</td>
+               <td>{miembroMinisterio.nombre}</td>
+               <td>
+                  {miembroMinisterio.fecha_ingreso === null
+                     ? miembroMinisterio.fecha_ingreso
+                     : moment(miembroMinisterio.fecha_ingreso).format(
+                          'YYYY-MM-DD HH:MM:SS'
+                       )}
+               </td>
+               <td>{miembroMinisterio.fecha_retiro}</td>
+            </>
+         )}
 
          <td>
             {edit ? (
