@@ -40,7 +40,7 @@ export const FormularioMiembros = () => {
          },
          (error) => {
             console.log(error);
-            toast.error('Error agregando Miembro');
+            toast.error(error.response.data.error);
          }
       );
 
