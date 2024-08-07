@@ -4,16 +4,12 @@ import { useEffect, useState, useContext } from 'react';
 // Contexto
 import { ShalomContext } from '../../Context';
 
-import {
-   consultarMinisteriosAPI,
-   editarMiembroMinisterioAPI,
-} from '../../utils/api';
+import { editarMiembroMinisterioAPI } from '../../utils/api';
 
 // Librerias
 import PropTypes from 'prop-types';
 import { Tooltip } from '@mui/material';
 import { Dialog } from '@mui/material';
-import { nanoid } from 'nanoid';
 
 // Mensajes pop-pup
 import { toast } from 'react-toastify';
@@ -27,21 +23,21 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
    const context = useContext(ShalomContext);
 
    // Estados
-   const [localMiembroMinisterio, setLocalMiembroMinisterio] =
-      useState(miembroMinisterio);
+   useState(miembroMinisterio);
    const [edit, setEdit] = useState(false);
    const [openDialog, setOpenDialog] = useState(false);
-   const [ministeriosLocal, setMinisteriosLocal] = useState([]);
-   const [ministerioInicial, setMinisterioInicial] = useState('');
-   const [ministerioFinal, setMinisterioFinal] = useState('');
+   const [fechaIngreso, setFechaIngreso] = useState('');
 
    // Actualizar
    const onUpdateMiembroMinisterio = async () => {
       await editarMiembroMinisterioAPI(
-         ministerioInicial,
          {
             id_miembro: miembroMinisterio.id_miembro,
-            id_ministerio: ministerioFinal,
+            id_ministerio: miembroMinisterio.id_ministerio,
+         },
+         {
+            fechaIngreso,
+            // fecha_retiro: miembroMinisterio.fecha_retiro,
          },
          (response) => {
             console.log(JSON.stringify(response.data));
@@ -56,21 +52,13 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       );
    };
 
-   useEffect(() => {
-      setLocalMiembroMinisterio(miembroMinisterio);
-   }, [miembroMinisterio]);
-
    const handleEditToggle = () => {
       setEdit(!edit);
    };
 
-   // Guardar los cambios
-   const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setLocalMiembroMinisterio({
-         ...localMiembroMinisterio,
-         [name]: value,
-      });
+   // Manejar evento del calendario
+   const handleInputDate = (event) => {
+      setFechaIngreso(event.target.value);
    };
 
    // Enviar al padre objeto editado
@@ -88,42 +76,49 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
 
    // Consultar Ministerios para llenar select
    useEffect(() => {
-      const consultarMinisterios = async () => {
-         await consultarMinisteriosAPI(
-            (response) => {
-               console.log(JSON.stringify(response.data));
-               setMinisteriosLocal(response.data);
-               // const defaultOption = response.data.find(option => option.id_ministerio === )
-            },
-            (error) => {
-               console.log('Salio un error: ', error);
-            }
-         );
-      };
-
       if (edit) {
-         setMinisterioInicial(miembroMinisterio.id_ministerio);
-         setMinisterioFinal(miembroMinisterio.id_ministerio);
-         consultarMinisterios();
+         setFechaIngreso(formatDate(miembroMinisterio.fecha_ingreso));
       }
    }, [edit]);
+
+   // Formatear fecha
+   const formatDate = (dateStr) => {
+      return moment(dateStr).format('YYYY-MM-DD HH:mm:ss');
+   };
 
    return (
       <tr>
          {edit ? (
             <>
                <td>
-                  {/* <input type='hidden' value={miembroMinisterio.id_miembro} /> */}
                   <input
                      type='text'
                      name='nombre_completo'
                      readOnly
                      value={miembroMinisterio.nombre_completo}
-                     onChange={handleInputChange}
                      className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                   />
                </td>
                <td>
+                  <input
+                     type='text'
+                     name='id_ministerio'
+                     readOnly
+                     value={miembroMinisterio.nombre}
+                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
+                  />
+               </td>
+               <td>
+                  <input
+                     type='datetime-local'
+                     id='fecha_ingreso'
+                     name='fecha_ingreso'
+                     value={formatDate(fechaIngreso)}
+                     onChange={handleInputDate}
+                  ></input>
+               </td>
+               <td></td>
+               {/* <td>
                   <select
                      id='id_ministerio'
                      name='id_ministerio'
@@ -143,7 +138,7 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                         </option>
                      ))}
                   </select>
-               </td>
+               </td> */}
             </>
          ) : (
             <>
@@ -152,16 +147,12 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                <td>
                   {miembroMinisterio.fecha_ingreso === null
                      ? miembroMinisterio.fecha_ingreso
-                     : moment(miembroMinisterio.fecha_ingreso).format(
-                          'YYYY-MM-DD HH:MM:SS'
-                       )}
+                     : formatDate(miembroMinisterio.fecha_ingreso)}
                </td>
                <td>
                   {miembroMinisterio.fecha_retiro === null
                      ? miembroMinisterio.fecha_retiro
-                     : moment(miembroMinisterio.fecha_retiro).format(
-                          'YYYY-MM-DD HH:MM:SS'
-                       )}
+                     : formatDate(miembroMinisterio.fecha_retiro)}
                </td>
             </>
          )}

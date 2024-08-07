@@ -69,5 +69,5 @@ export const ShalomProvider = ({ children }) => {
 };
 
 ShalomProvider.propTypes = {
-   children: PropTypes.func,
+   children: PropTypes.object,
 };
