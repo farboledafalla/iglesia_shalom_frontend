@@ -41,7 +41,7 @@ export const insertarMiembroAPI = async (
 
 // Editar Miembro
 export const editarMiembroAPI = async (
-   id,
+   ids,
    data,
    successCallback,
    errorCallback
@@ -49,7 +49,7 @@ export const editarMiembroAPI = async (
    const config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `${baseURL}/miembros/${id}`,
+      url: `${baseURL}/miembros/${ids.id_miembro}/${ids.id_ministerio}`,
       headers: {
          'Content-Type': 'application/json',
       },
@@ -189,7 +189,7 @@ export const insertarMiembroMinisterioAPI = async (
 
 // Editar Ministerio
 export const editarMiembroMinisterioAPI = async (
-   id,
+   ids,
    data,
    successCallback,
    errorCallback
@@ -197,7 +197,7 @@ export const editarMiembroMinisterioAPI = async (
    const config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `${baseURL}/miem-mini/${id}`,
+      url: `${baseURL}/miem-mini/${ids.id_miembro}/${ids.id_ministerio}`,
       headers: {
          'Content-Type': 'application/json',
       },
