@@ -51,7 +51,7 @@ export const FormularioMiembrosMinisterios = () => {
          },
          (error) => {
             console.log(error);
-            toast.error('Error agregando registro');
+            toast.error(error.response.data.status);
          }
       );
    };
