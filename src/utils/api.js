@@ -41,7 +41,7 @@ export const insertarMiembroAPI = async (
 
 // Editar Miembro
 export const editarMiembroAPI = async (
-   ids,
+   id,
    data,
    successCallback,
    errorCallback
@@ -49,7 +49,7 @@ export const editarMiembroAPI = async (
    const config = {
       method: 'put',
       maxBodyLength: Infinity,
-      url: `${baseURL}/miembros/${ids.id_miembro}/${ids.id_ministerio}`,
+      url: `${baseURL}/miembros/${id}`,
       headers: {
          'Content-Type': 'application/json',
       },
