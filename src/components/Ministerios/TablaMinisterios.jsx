@@ -64,9 +64,9 @@ export const TablaMinisterios = ({ ministerios }) => {
          <table className='tabla'>
             <thead>
                <tr>
-                  <th>Identificación</th>
                   <th>Nombre</th>
                   <th>Descripción</th>
+                  <th>Acciones</th>
                </tr>
             </thead>
             <tbody>
