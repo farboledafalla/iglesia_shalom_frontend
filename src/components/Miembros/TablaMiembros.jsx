@@ -57,7 +57,7 @@ export const TablaMiembros = ({ miembros }) => {
          },
          (error) => {
             console.log(error);
-            toast.error('Error eliminando Miembro');
+            toast.error(error.response.data.status);
          }
       );
    };
