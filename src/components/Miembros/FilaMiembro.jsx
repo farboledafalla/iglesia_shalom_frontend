@@ -39,6 +39,7 @@ export const FilaMiembro = ({ miembro, onUpdateMiembro, onDeleteMiembro }) => {
    // Enviar al padre objeto para eliminar
    const handleDelete = () => {
       onDeleteMiembro(localMiembro);
+      setOpenDialog(false);
    };
 
    return (

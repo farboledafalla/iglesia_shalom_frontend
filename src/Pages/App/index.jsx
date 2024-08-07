@@ -10,6 +10,7 @@ import { Miembros } from '../Miembros';
 import { Ministerios } from '../Ministerios';
 import { MiembrosMinisterios } from '../MiembrosMinisterios';
 import { NotFound } from '../NotFound';
+import { Relacionar } from '../Relacionar';
 
 // Componentes
 import { Navbar } from '../../components/Navbar';
@@ -36,6 +37,10 @@ const AppRoutes = () => {
          element: <MiembrosMinisterios />,
       },
       {
+         path: '/relacionar',
+         element: <Relacionar />,
+      },
+      {
          path: '/*',
          element: <NotFound />,
       },
@@ -53,4 +58,3 @@ export const App = () => {
       </ShalomProvider>
    );
 };
-   

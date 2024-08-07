@@ -46,6 +46,16 @@ export const Navbar = () => {
                   Miem/Minis
                </NavLink>
             </li>
+            <li>
+               <NavLink
+                  to='/relacionar'
+                  className={({ isActive }) =>
+                     isActive ? activeStyle : undefined
+                  }
+               >
+                  Relacionar
+               </NavLink>
+            </li>
          </ul>
       </nav>
    );
