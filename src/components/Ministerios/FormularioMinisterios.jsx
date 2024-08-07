@@ -38,7 +38,7 @@ export const FormularioMinisterios = () => {
          },
          (error) => {
             console.log(error);
-            toast.error('Error agregando Ministerio');
+            toast.error(error.response.data.error);
          }
       );
       console.log('setMostrarTablaMin: ', context.setMostrarTablaMin);
