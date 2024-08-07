@@ -153,7 +153,7 @@ export const eliminarMinisterioAPI = async (
  *              Miembros - Ministerios
  ***************************************************/
 
-// Consultar Miembros
+// Consultar Miembros Ministerios
 export const consultarMiembrosMinisteriosAPI = async (
    successCallback,
    errorCallback
@@ -202,6 +202,42 @@ export const editarMiembroMinisterioAPI = async (
          'Content-Type': 'application/json',
       },
       data: data,
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Retirar Ministerio
+export const retirarMiembroMinisterioAPI = async (
+   ids,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/miem-mini/retirar/${ids.id_miembro}/${ids.id_ministerio}`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
+   };
+
+   await axios.request(config).then(successCallback).catch(errorCallback);
+};
+
+// Eliminar Miembro - Ministerio
+export const eliminarMiembroMinisterioAPI = async (
+   ids,
+   successCallback,
+   errorCallback
+) => {
+   const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `${baseURL}/miem-mini/eliminar/${ids.id_miembro}/${ids.id_ministerio}`,
+      headers: {
+         'Content-Type': 'application/json',
+      },
    };
 
    await axios.request(config).then(successCallback).catch(errorCallback);

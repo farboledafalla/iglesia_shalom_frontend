@@ -4,7 +4,11 @@ import { useEffect, useState, useContext } from 'react';
 // Contexto
 import { ShalomContext } from '../../Context';
 
-import { editarMiembroMinisterioAPI } from '../../utils/api';
+import {
+   editarMiembroMinisterioAPI,
+   retirarMiembroMinisterioAPI,
+   eliminarMiembroMinisterioAPI,
+} from '../../utils/api';
 
 // Librerias
 import PropTypes from 'prop-types';
@@ -27,6 +31,8 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
    const [edit, setEdit] = useState(false);
    const [openDialog, setOpenDialog] = useState(false);
    const [fechaIngreso, setFechaIngreso] = useState('');
+   const [fechaRetiro, setFechaRetiro] = useState('');
+   const [openDialogDelete, setOpenDialogDelete] = useState(false);
 
    // Actualizar
    const onUpdateMiembroMinisterio = async () => {
@@ -37,7 +43,6 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
          },
          {
             fechaIngreso,
-            // fecha_retiro: miembroMinisterio.fecha_retiro,
          },
          (response) => {
             console.log(JSON.stringify(response.data));
@@ -52,32 +57,80 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
       );
    };
 
+   // Retirar Miembro del Ministerio
+   const onWithdrawMiembroMinisterio = async () => {
+      await retirarMiembroMinisterioAPI(
+         {
+            id_miembro: miembroMinisterio.id_miembro,
+            id_ministerio: miembroMinisterio.id_ministerio,
+         },
+         (response) => {
+            console.log(JSON.stringify(response.data));
+            toast.success('Miembro retirado del ministerio');
+            context.setEjecutarConsultaMieMin(true);
+         },
+         (error) => {
+            console.log(error);
+            toast.error('Error retirando miembro del ministerio');
+         }
+      );
+   };
+
+   // Eliminar registro de la pantalla
+   const onDeleteMiembroMinisterio = async () => {
+      await eliminarMiembroMinisterioAPI(
+         {
+            id_miembro: miembroMinisterio.id_miembro,
+            id_ministerio: miembroMinisterio.id_ministerio,
+         },
+         (response) => {
+            console.log(JSON.stringify(response.data));
+            toast.success('Registro eliminado');
+            context.setEjecutarConsultaMieMin(true);
+         },
+         (error) => {
+            console.log(error);
+            toast.error('Error eliminando registro');
+         }
+      );
+   };
+
    const handleEditToggle = () => {
       setEdit(!edit);
    };
 
    // Manejar evento del calendario
-   const handleInputDate = (event) => {
+   const handleInputDateIngreso = (event) => {
       setFechaIngreso(event.target.value);
    };
 
-   // Enviar al padre objeto editado
+   const handleInputDateRetiro = (event) => {
+      setFechaRetiro(event.target.value);
+   };
+
+   // Editar fecha de ingreso
    const handleUpdate = () => {
-      console.log('Hola desde handleUpdate');
+      console.log('miembroMinisterio.estado: ', miembroMinisterio.estado);
       onUpdateMiembroMinisterio();
       setEdit(false);
    };
 
-   // Enviar al padre objeto para eliminar
-   const handleDelete = () => {
-      console.log('Hola desde handleDelete');
+   // Retirar miembro del ministerio
+   const handleWithdraw = () => {
+      onWithdrawMiembroMinisterio();
       setOpenDialog(false);
    };
 
-   // Consultar Ministerios para llenar select
+   const handleDelete = () => {
+      onDeleteMiembroMinisterio();
+      setOpenDialogDelete(false);
+   };
+
+   // Establecer fechas
    useEffect(() => {
       if (edit) {
          setFechaIngreso(formatDate(miembroMinisterio.fecha_ingreso));
+         setFechaRetiro(formatDate(miembroMinisterio.fecha_retiro));
       }
    }, [edit]);
 
@@ -114,31 +167,20 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                      id='fecha_ingreso'
                      name='fecha_ingreso'
                      value={formatDate(fechaIngreso)}
-                     onChange={handleInputDate}
+                     onChange={handleInputDateIngreso}
                   ></input>
                </td>
-               <td></td>
-               {/* <td>
-                  <select
-                     id='id_ministerio'
-                     name='id_ministerio'
-                     value={ministerioFinal}
-                     onChange={(e) => setMinisterioFinal(e.target.value)}
-                     className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
-                  >
-                     <option disabled selected>
-                        Seleccione
-                     </option>
-                     {ministeriosLocal.map((ministerioLocal) => (
-                        <option
-                           key={nanoid()}
-                           value={ministerioLocal.id_ministerio}
-                        >
-                           {ministerioLocal.nombre}
-                        </option>
-                     ))}
-                  </select>
-               </td> */}
+               <td>
+                  {miembroMinisterio.estado == 'C' && (
+                     <input
+                        type='datetime-local'
+                        id='fecha_retiro'
+                        name='fecha_retiro'
+                        value={formatDate(fechaRetiro)}
+                        onChange={handleInputDateRetiro}
+                     ></input>
+                  )}
+               </td>
             </>
          ) : (
             <>
@@ -175,28 +217,71 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                </>
             ) : (
                <>
-                  <Tooltip title='Editar Registro' placement='top-end' arrow>
+                  <Tooltip
+                     title='Editar Fecha Ingreso'
+                     placement='top-end'
+                     arrow
+                  >
                      <i
                         onClick={handleEditToggle}
                         className='fas fa-pencil-alt text-yellow-500 mx-2 cursor-pointer'
                      />
                   </Tooltip>
-                  <Tooltip
-                     title='Eliminar Registro'
-                     placement='top-start'
-                     arrow
-                  >
-                     <i
-                        onClick={() => setOpenDialog(true)}
-                        className='fas fa-trash text-red-500 mx-2 cursor-pointer'
-                     />
-                  </Tooltip>
+                  {miembroMinisterio.estado == 'A' ? (
+                     <Tooltip
+                        title='Retirar del Ministerio'
+                        placement='top-start'
+                        arrow
+                     >
+                        <i
+                           onClick={() => setOpenDialog(true)}
+                           className='fas fa-door-open text-orange-500 mx-2 cursor-pointer'
+                        />
+                     </Tooltip>
+                  ) : (
+                     <i className='fas fa-door-open text-white mx-2 hover:text-slate-200' />
+                  )}
+                  {miembroMinisterio.estado == 'C' ? (
+                     <Tooltip
+                        title='Eliminar registro'
+                        placement='top-end'
+                        arrow
+                     >
+                        <i
+                           onClick={() => setOpenDialogDelete(true)}
+                           className='fas fa-trash text-red-500 mx-2 cursor-pointer'
+                        />
+                     </Tooltip>
+                  ) : (
+                     <i className='fas fa-trash text-white mx-2 hover:text-slate-200' />
+                  )}
                </>
             )}
             <Dialog open={openDialog}>
                <div className='p-8 flex flex-col'>
                   <h1 className='text-gray-900 text-2xl font-bold'>
-                     ¿Seguro de eliminar el Registro?
+                     ¿Seguro de retirar miembro del ministerio?
+                  </h1>
+                  <div className='flex w-full items-center justify-center my-4'>
+                     <button
+                        onClick={handleWithdraw}
+                        className='mx-2 px-4 py-2 bg-green-500 text-white hover:bg-green-700 rounded-md shadow-md'
+                     >
+                        Si
+                     </button>
+                     <button
+                        onClick={() => setOpenDialog(false)}
+                        className='mx-2 px-4 py-2 bg-red-500 text-white hover:bg-red-700 rounded-md shadow-md'
+                     >
+                        No
+                     </button>
+                  </div>
+               </div>
+            </Dialog>
+            <Dialog open={openDialogDelete}>
+               <div className='p-8 flex flex-col'>
+                  <h1 className='text-gray-900 text-2xl font-bold'>
+                     ¿Seguro desea eliminar el registro?
                   </h1>
                   <div className='flex w-full items-center justify-center my-4'>
                      <button
@@ -206,7 +291,7 @@ export const FilaMiembroMinisterio = ({ miembroMinisterio }) => {
                         Si
                      </button>
                      <button
-                        onClick={() => setOpenDialog(false)}
+                        onClick={() => setOpenDialogDelete(false)}
                         className='mx-2 px-4 py-2 bg-red-500 text-white hover:bg-red-700 rounded-md shadow-md'
                      >
                         No
