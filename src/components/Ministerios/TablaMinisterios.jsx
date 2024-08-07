@@ -53,7 +53,7 @@ export const TablaMinisterios = ({ ministerios }) => {
          },
          (error) => {
             console.log(error);
-            toast.error('Error eliminando Ministerio');
+            toast.error(error.response.data.status);
          }
       );
    };
