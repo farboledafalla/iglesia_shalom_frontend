@@ -36,8 +36,8 @@ export const FilaMinisterio = ({
    };
 
    const handleDelete = () => {
-      console.log('hadleDelete');
       onDeleteMinisterio(localMinisterio);
+      setOpenDialog(false);
    };
 
    const handleUpdate = () => {
