@@ -13,6 +13,7 @@ import { NotFound } from '../NotFound';
 import { Register } from '../Auth/Register';
 import { ProtectedRoute } from '../Auth/ProtectedRoute';
 import { Login } from '../Auth/Login';
+import { Logout } from '../Auth/Logout';
 
 // Componentes
 import { Navbar } from '../../components/Navbar';
@@ -37,6 +38,10 @@ const AppRoutes = () => {
       {
          path: '/login',
          element: <Login />,
+      },
+      {
+         path: '/logout',
+         element: <Logout />,
       },
       {
          path: '/miembros',

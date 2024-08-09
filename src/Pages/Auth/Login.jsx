@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
 
 export const Login = () => {
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
-   // const navigate = useNavigate();
+   const navigate = useNavigate();
+   const location = useLocation();
+
+   const from = location.state?.from?.pathname || '/';
 
    const handleLogin = async (e) => {
       e.preventDefault();
@@ -17,7 +20,7 @@ export const Login = () => {
          });
          localStorage.setItem('token', response.data.token);
          console.log(response.data);
-         <Navigate to='/miembros' />;
+         navigate(from, { replace: true });
       } catch (error) {
          console.error('Error en el login: ', error);
          alert(error.response.data.error);

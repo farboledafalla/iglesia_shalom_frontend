@@ -46,6 +46,16 @@ export const Navbar = () => {
                   Miem/Minis
                </NavLink>
             </li>
+            <li>
+               <NavLink
+                  to='/logout'
+                  className={({ isActive }) =>
+                     isActive ? activeStyle : undefined
+                  }
+               >
+                  Cerrar sesión
+               </NavLink>
+            </li>
          </ul>
       </nav>
    );
