@@ -10,6 +10,9 @@ import { Miembros } from '../Miembros';
 import { Ministerios } from '../Ministerios';
 import { MiembrosMinisterios } from '../MiembrosMinisterios';
 import { NotFound } from '../NotFound';
+import { Register } from '../Auth/Register';
+import { ProtectedRoute } from '../Auth/ProtectedRoute';
+import { Login } from '../Auth/Login';
 
 // Componentes
 import { Navbar } from '../../components/Navbar';
@@ -21,19 +24,43 @@ const AppRoutes = () => {
    let routes = useRoutes([
       {
          path: '/',
-         element: <Home />,
+         element: (
+            <ProtectedRoute>
+               <Home />
+            </ProtectedRoute>
+         ),
+      },
+      {
+         path: '/register',
+         element: <Register />,
+      },
+      {
+         path: '/login',
+         element: <Login />,
       },
       {
          path: '/miembros',
-         element: <Miembros />,
+         element: (
+            <ProtectedRoute>
+               <Miembros />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/ministerios',
-         element: <Ministerios />,
+         element: (
+            <ProtectedRoute>
+               <Ministerios />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/miem_mini',
-         element: <MiembrosMinisterios />,
+         element: (
+            <ProtectedRoute>
+               <MiembrosMinisterios />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/*',
@@ -53,4 +80,3 @@ export const App = () => {
       </ShalomProvider>
    );
 };
-   
