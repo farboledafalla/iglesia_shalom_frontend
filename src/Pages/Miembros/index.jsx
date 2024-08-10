@@ -16,6 +16,9 @@ import 'react-toastify/dist/ReactToastify.css';
 // API
 import { consultarMiembrosAPI } from '../../utils/api';
 
+// Información del login
+import { UserInfo } from '../../components/Auth/UserInfo';
+
 export const Miembros = () => {
    // Crear contexto
    const context = useContext(ShalomContext);
@@ -59,6 +62,9 @@ export const Miembros = () => {
    return (
       <Layout>
          <div className='flex flex-col h-full w-full items-center justify-center'>
+            <div className='w-full flex justify-end items-center mb-3 text-xl font-semibold'>
+               {UserInfo()}
+            </div>
             <div className='flex flex-col mb-12'>
                <h2 className='text-3xl font-extrabold text-center'>
                   Administración de Miembros
