@@ -11,7 +11,7 @@ import { Ministerios } from '../Ministerios';
 import { MiembrosMinisterios } from '../MiembrosMinisterios';
 import { NotFound } from '../NotFound';
 import { Register } from '../Auth/Register';
-import { ProtectedRoute } from '../Auth/ProtectedRoute';
+import { ProtectedRoute } from '../../components/Auth/ProtectedRoute';
 import { Login } from '../Auth/Login';
 import { Logout } from '../Auth/Logout';
 

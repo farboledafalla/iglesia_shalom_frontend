@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
 
@@ -69,6 +69,9 @@ export const Login = () => {
                   </button>
                </div>
             </form>
+            <div className='mt-6 text-center text-blue-500 underline underline-offset-2'>
+               <NavLink to='/register'>Registrarme</NavLink>
+            </div>
          </div>
       </Layout>
    );
