@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
 
+// Contexto
+import { ShalomContext } from '../../Context';
+
 export const Login = () => {
+   // Crear contexto
+   const context = useContext(ShalomContext);
+
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
    const navigate = useNavigate();
    const location = useLocation();
 
+   // Obtiene la ruta desde donde viene, si no existe deja la raiz
    const from = location.state?.from?.pathname || '/';
 
    const handleLogin = async (e) => {
@@ -20,6 +27,9 @@ export const Login = () => {
          });
          localStorage.setItem('token', response.data.token);
          console.log(response.data);
+         context.setLoggedUser(username);
+
+         //Navega a la ruta desde doncde intentó ingresar
          navigate(from, { replace: true });
       } catch (error) {
          console.error('Error en el login: ', error);
