@@ -1,12 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useFocusInput } from '../../utils/focusInput';
 
 export const Register = () => {
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
    const navigate = useNavigate();
+
+   // Referencia al input username
+   const usernameRef = useRef(null);
+
+   // Establecer foco en el input username
+   useFocusInput(usernameRef);
 
    const handleRegister = async (e) => {
       e.preventDefault();
@@ -39,6 +46,7 @@ export const Register = () => {
                         onChange={(e) => setUsername(e.target.value)}
                         required
                         autoComplete='username'
+                        ref={usernameRef}
                         className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                      />
                   </label>

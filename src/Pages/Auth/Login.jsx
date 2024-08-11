@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
@@ -8,6 +8,9 @@ import { ShalomContext } from '../../Context';
 
 // Auth
 import { UserInfo } from '../../components/Auth/UserInfo';
+
+// Utils
+import { useFocusInput } from '../../utils/focusInput';
 
 export const Login = () => {
    // Crear contexto
@@ -20,6 +23,12 @@ export const Login = () => {
 
    // Obtiene la ruta desde donde viene, si no existe deja la raiz
    const from = location.state?.from?.pathname || '/';
+
+   // Crear referencia para el input username
+   const usernameRef = useRef(null);
+
+   // Establecer foco en el input username
+   useFocusInput(usernameRef);
 
    const handleLogin = async (e) => {
       e.preventDefault();
@@ -55,6 +64,7 @@ export const Login = () => {
                         onChange={(e) => setUsername(e.target.value)}
                         required
                         autoComplete='username'
+                        ref={usernameRef}
                         className='border border-gray-500 p-2 mt-2 mb-3 rounded-lg focus:outline-none focus:border-indigo-500'
                      />
                   </label>
