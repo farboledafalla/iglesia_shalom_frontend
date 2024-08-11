@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Layout } from '../../components/Layout';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 export const Register = () => {
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
+   const navigate = useNavigate();
 
    const handleRegister = async (e) => {
       e.preventDefault();
@@ -18,6 +19,7 @@ export const Register = () => {
             }
          );
          console.log(response.data);
+         navigate('/login');
       } catch (error) {
          console.error('Error registering', error);
       }

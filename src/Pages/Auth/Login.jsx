@@ -6,6 +6,9 @@ import { Layout } from '../../components/Layout';
 // Contexto
 import { ShalomContext } from '../../Context';
 
+// Auth
+import { UserInfo } from '../../components/Auth/UserInfo';
+
 export const Login = () => {
    // Crear contexto
    const context = useContext(ShalomContext);
@@ -27,7 +30,7 @@ export const Login = () => {
          });
          localStorage.setItem('token', response.data.token);
          console.log(response.data);
-         context.setLoggedUser(username);
+         context.setLoggedUser(UserInfo());
 
          //Navega a la ruta desde doncde intentó ingresar
          navigate(from, { replace: true });
