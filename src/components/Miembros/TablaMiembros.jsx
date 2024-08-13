@@ -1,5 +1,5 @@
 // Componentes React
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 // Componentes Miembros
 import { FilaMiembro } from './FilaMiembro';
@@ -17,10 +17,81 @@ import 'react-toastify/dist/ReactToastify.css';
 // Librerias
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import axios from 'axios';
 
 export const TablaMiembros = ({ miembros }) => {
    // Crear contexto
    const context = useContext(ShalomContext);
+
+   const [members, setMembers] = useState([]);
+   const [currentPage, setCurrentPage] = useState(1);
+   const [totalPages, setTotalPages] = useState(0);
+
+   useEffect(() => {
+      fetchMembers(currentPage);
+   }, [currentPage]);
+
+   const fetchMembers = async (page) => {
+      try {
+         const response = await axios.get(
+            'http://localhost:3000/api/pag_miembros',
+            {
+               params: {
+                  page: page,
+                  limit: 5,
+               },
+            }
+         );
+         setMembers(response.data.miembros);
+         setTotalPages(response.data.totalPages);
+      } catch (error) {
+         console.error('Error fetching members:', error);
+      }
+   };
+
+   const handlePageChange = (page) => {
+      setCurrentPage(page);
+   };
+
+   const renderPageNumbers = () => {
+      const pageNumbers = [];
+
+      // Mostrar siempre la primera página
+      if (currentPage > 3) {
+         pageNumbers.push(1);
+         if (currentPage > 4) {
+            pageNumbers.push('...');
+         }
+      }
+
+      // Páginas intermedias
+      for (
+         let i = Math.max(2, currentPage - 2);
+         i <= Math.min(totalPages - 1, currentPage + 2);
+         i++
+      ) {
+         pageNumbers.push(i);
+      }
+
+      // Mostrar siempre la última página
+      if (currentPage < totalPages - 2) {
+         if (currentPage < totalPages - 3) {
+            pageNumbers.push('...');
+         }
+         pageNumbers.push(totalPages);
+      }
+
+      return pageNumbers.map((page, index) => (
+         <button
+            key={index}
+            onClick={() => handlePageChange(page)}
+            disabled={page === currentPage || page === '...'}
+            className='bg-slate-700 text-white px-2 mx-1'
+         >
+            {page}
+         </button>
+      ));
+   };
 
    // Actualizar
    const onUpdateMiembro = async (miembroActualizado) => {
@@ -76,7 +147,7 @@ export const TablaMiembros = ({ miembros }) => {
                </tr>
             </thead>
             <tbody>
-               {miembros.map((miembro) => {
+               {members.map((miembro) => {
                   return (
                      <FilaMiembro
                         key={nanoid()}
@@ -88,6 +159,45 @@ export const TablaMiembros = ({ miembros }) => {
                })}
             </tbody>
          </table>
+         <div>
+            <ul>
+               {members.map((member) => (
+                  <li key={member.id}>{member.name}</li>
+               ))}
+            </ul>
+
+            <div>
+               {/* {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                     key={index + 1}
+                     onClick={() => handlePageChange(index + 1)}
+                     disabled={currentPage === index + 1}
+                     className='bg-slate-700 text-white px-2 mx-1 cursor-pointer'
+                  >
+                     {index + 1}
+                  </button>
+               ))} */}
+               {/* Botón para ir a la página anterior */}
+               <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className='bg-slate-700 text-white px-2 mx-1'
+               >
+                  Prev
+               </button>
+
+               {renderPageNumbers()}
+
+               {/* Botón para ir a la página siguiente */}
+               <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className='bg-slate-700 text-white px-2 mx-1'
+               >
+                  Next
+               </button>
+            </div>
+         </div>
       </div>
    );
 };
