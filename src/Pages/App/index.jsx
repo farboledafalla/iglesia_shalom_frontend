@@ -68,6 +68,10 @@ const AppRoutes = () => {
          ),
       },
       {
+         path: '/relacionar',
+         element: <Relacionar />,
+      },
+      {
          path: '/*',
          element: <NotFound />,
       },
