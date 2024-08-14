@@ -10,7 +10,10 @@ import { Miembros } from '../Miembros';
 import { Ministerios } from '../Ministerios';
 import { MiembrosMinisterios } from '../MiembrosMinisterios';
 import { NotFound } from '../NotFound';
-import { Relacionar } from '../Relacionar';
+import { Register } from '../Auth/Register';
+import { ProtectedRoute } from '../../components/Auth/ProtectedRoute';
+import { Login } from '../Auth/Login';
+import { Logout } from '../Auth/Logout';
 
 // Componentes
 import { Navbar } from '../../components/Navbar';
@@ -22,19 +25,47 @@ const AppRoutes = () => {
    let routes = useRoutes([
       {
          path: '/',
-         element: <Home />,
+         element: (
+            <ProtectedRoute>
+               <Home />
+            </ProtectedRoute>
+         ),
+      },
+      {
+         path: '/register',
+         element: <Register />,
+      },
+      {
+         path: '/login',
+         element: <Login />,
+      },
+      {
+         path: '/logout',
+         element: <Logout />,
       },
       {
          path: '/miembros',
-         element: <Miembros />,
+         element: (
+            <ProtectedRoute>
+               <Miembros />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/ministerios',
-         element: <Ministerios />,
+         element: (
+            <ProtectedRoute>
+               <Ministerios />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/miem_mini',
-         element: <MiembrosMinisterios />,
+         element: (
+            <ProtectedRoute>
+               <MiembrosMinisterios />
+            </ProtectedRoute>
+         ),
       },
       {
          path: '/relacionar',

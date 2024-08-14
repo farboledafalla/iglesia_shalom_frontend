@@ -1,6 +1,13 @@
+import { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 
+// Contexto
+import { ShalomContext } from '../../Context';
+
 export const Navbar = () => {
+   // Crear contexto
+   const context = useContext(ShalomContext);
+
    // Estilos opción Navbar activo
    const activeStyle = 'underline underline-offset-4';
    return (
@@ -48,13 +55,16 @@ export const Navbar = () => {
             </li>
             <li>
                <NavLink
-                  to='/relacionar'
+                  to='/logout'
                   className={({ isActive }) =>
                      isActive ? activeStyle : undefined
                   }
                >
-                  Relacionar
+                  Salir
                </NavLink>
+            </li>
+            <li className='w-full flex justify-end items-center text-xl font-semibold'>
+               {context.loggedUser}
             </li>
          </ul>
       </nav>

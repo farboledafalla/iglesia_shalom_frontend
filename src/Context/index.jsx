@@ -27,6 +27,7 @@ export const ShalomProvider = ({ children }) => {
    const [colorBotonMieMin, setColorBotonMieMin] = useState('bg-green-500');
    const [ejecutarConsultaMieMin, setEjecutarConsultaMieMin] = useState(true);
    const [miembrosMinisterios, setMiembrosMinisterios] = useState([]);
+   const [loggedUser, setLoggedUser] = useState('');
 
    return (
       <ShalomContext.Provider
@@ -61,6 +62,8 @@ export const ShalomProvider = ({ children }) => {
             setEjecutarConsultaMieMin,
             miembrosMinisterios,
             setMiembrosMinisterios,
+            loggedUser,
+            setLoggedUser,
          }}
       >
          {children}
