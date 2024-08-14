@@ -1,5 +1,8 @@
 import { useContext } from 'react';
 
+// Hooks personalizados
+import { usePaginatedFetch } from '../../Hooks/usePaginatedFetch';
+
 // Contexto
 import { ShalomContext } from '../../Context';
 
@@ -20,6 +23,62 @@ import { nanoid } from 'nanoid';
 export const TablaMinisterios = ({ ministerios }) => {
    // Crear contexto
    const context = useContext(ShalomContext);
+
+   const {
+      data: ministeries,
+      currentPage,
+      totalPages,
+      loading,
+      setCurrentPage,
+   } = usePaginatedFetch('http://localhost:3000/api/pag_ministerios', 1, 3);
+
+   const handlePageChange = (page) => {
+      setCurrentPage(page);
+   };
+
+   const renderPageNumbers = () => {
+      const pageNumbers = [];
+
+      // Mostrar siempre la primera página
+      if (currentPage > 3) {
+         pageNumbers.push(1);
+         if (currentPage > 4) {
+            pageNumbers.push('...');
+         }
+      }
+
+      // Páginas intermedias
+      for (
+         let i = Math.max(2, currentPage - 2);
+         i <= Math.min(totalPages - 1, currentPage + 2);
+         i++
+      ) {
+         pageNumbers.push(i);
+      }
+
+      // Mostrar siempre la última página
+      if (currentPage < totalPages - 2) {
+         if (currentPage < totalPages - 3) {
+            pageNumbers.push('...');
+         }
+         pageNumbers.push(totalPages);
+      }
+
+      return pageNumbers.map((page, index) => (
+         <button
+            key={index}
+            onClick={() => handlePageChange(page)}
+            disabled={page === currentPage || page === '...'}
+            className='bg-slate-700 text-white px-2 mx-1'
+         >
+            {page}
+         </button>
+      ));
+   };
+
+   if (loading) {
+      return <p>Loading...</p>;
+   }
 
    // Actualizar
    const onUpdateMinisterio = async (ministerioActualizado) => {
@@ -70,7 +129,7 @@ export const TablaMinisterios = ({ ministerios }) => {
                </tr>
             </thead>
             <tbody>
-               {ministerios.map((ministerio) => {
+               {ministeries.map((ministerio) => {
                   return (
                      <FilaMinisterio
                         key={nanoid()}
@@ -82,6 +141,26 @@ export const TablaMinisterios = ({ ministerios }) => {
                })}
             </tbody>
          </table>
+         <div>
+            <button
+               onClick={() => handlePageChange(currentPage - 1)}
+               disabled={currentPage === 1}
+               className='bg-slate-700 text-white px-2 mx-1'
+            >
+               Prev
+            </button>
+
+            {renderPageNumbers()}
+
+            {/* Botón para ir a la página siguiente */}
+            <button
+               onClick={() => handlePageChange(currentPage + 1)}
+               disabled={currentPage === totalPages}
+               className='bg-slate-700 text-white px-2 mx-1'
+            >
+               Next
+            </button>
+         </div>
       </div>
    );
 };

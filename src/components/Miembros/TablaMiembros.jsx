@@ -1,5 +1,8 @@
 // Componentes React
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
+
+// Hooks personalizados
+import { usePaginatedFetch } from '../../Hooks/usePaginatedFetch';
 
 // Componentes Miembros
 import { FilaMiembro } from './FilaMiembro';
@@ -17,37 +20,18 @@ import 'react-toastify/dist/ReactToastify.css';
 // Librerias
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-import axios from 'axios';
 
 export const TablaMiembros = ({ miembros }) => {
    // Crear contexto
    const context = useContext(ShalomContext);
 
-   const [members, setMembers] = useState([]);
-   const [currentPage, setCurrentPage] = useState(1);
-   const [totalPages, setTotalPages] = useState(0);
-
-   useEffect(() => {
-      fetchMembers(currentPage);
-   }, [currentPage]);
-
-   const fetchMembers = async (page) => {
-      try {
-         const response = await axios.get(
-            'http://localhost:3000/api/pag_miembros',
-            {
-               params: {
-                  page: page,
-                  limit: 5,
-               },
-            }
-         );
-         setMembers(response.data.miembros);
-         setTotalPages(response.data.totalPages);
-      } catch (error) {
-         console.error('Error fetching members:', error);
-      }
-   };
+   const {
+      data: members,
+      currentPage,
+      totalPages,
+      loading,
+      setCurrentPage,
+   } = usePaginatedFetch('http://localhost:3000/api/pag_miembros', 1, 3);
 
    const handlePageChange = (page) => {
       setCurrentPage(page);
@@ -92,6 +76,10 @@ export const TablaMiembros = ({ miembros }) => {
          </button>
       ));
    };
+
+   if (loading) {
+      return <p>Loading...</p>;
+   }
 
    // Actualizar
    const onUpdateMiembro = async (miembroActualizado) => {
@@ -160,12 +148,6 @@ export const TablaMiembros = ({ miembros }) => {
             </tbody>
          </table>
          <div>
-            <ul>
-               {members.map((member) => (
-                  <li key={member.id}>{member.name}</li>
-               ))}
-            </ul>
-
             <div>
                {/* {Array.from({ length: totalPages }, (_, index) => (
                   <button
